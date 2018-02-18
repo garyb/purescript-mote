@@ -1,0 +1,25 @@
+{
+  "name": "purescript-mote",
+  "homepage": "https://github.com/garyb/purescript-mote",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/garyb/purescript-mote.git"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "test",
+    "bower.json",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-these": "^3.0.0",
+    "purescript-transformers": "^3.5.0"
+  },
+  "devDependencies": {
+    "purescript-console": "^3.0.0"
+  }
+}
