@@ -6,7 +6,7 @@ import Data.Exists (Exists, mkExists, runExists)
 import Data.Maybe (Maybe(..))
 
 -- | Generic entry type used in the description of groups and items in both
--- | `Suite` and `Plan` representations.
+-- | `Description` and `Plan` representations.
 type Entry a b =
   { label :: String
   , bracket :: Maybe (Exists (Bracket a))

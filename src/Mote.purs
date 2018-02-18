@@ -3,5 +3,5 @@ module Mote
   , module Mote.Plan
   ) where
 
-import Mote.Monad (MoteT, Mote, group, item, skip, only, bracket, plan, planT)
-import Mote.Plan (Plan)
+import Mote.Monad (MoteT, Mote, group, test, skip, only, bracket, plan, planT)
+import Mote.Plan (Plan, foldPlan)

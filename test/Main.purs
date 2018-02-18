@@ -8,7 +8,7 @@ import Data.Exists (Exists)
 import Data.Foldable (sequence_)
 import Data.Maybe (Maybe, maybe)
 import Data.Monoid (power)
-import Mote (Mote, Plan, bracket, group, item, only, plan, skip)
+import Mote (Mote, Plan, bracket, group, test, only, plan, skip)
 import Mote.Entry (Bracket, unBracket)
 import Mote.Plan (foldPlan)
 
@@ -49,22 +49,22 @@ interpret = run 0
 spec :: Mote TestBracket (Test Unit) Unit
 spec = do
   group "A bunch of stuff" do
-    skip $ item "Do a setup thing" do
+    skip $ test "Do a setup thing" do
       pure unit
     skip $ group "Some less stuff" do
-      item "A thing" do
+      test "A thing" do
         pure unit
-      only $ item "Another thing" do
+      only $ test "Another thing" do
         pure unit
-      item "A final thing" do
+      test "A final thing" do
         pure unit
     group "Some other less stuff" do
       bracket { before: log "> Sneak before", after: const (log "> Sneak after") } do
-        item "A other thing" do
+        test "A other thing" do
           log "Do some test bidnezz"
           pure unit
-        item "A other thing 2" do
+        test "A other thing 2" do
           log "Do some test bidnezz"
           pure unit
-      item "Another other thing" do
+      test "Another other thing" do
         pure unit

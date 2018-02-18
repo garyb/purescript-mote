@@ -12,18 +12,18 @@ import Data.Newtype (class Newtype, un)
 import Data.These (These(..), theseLeft, theseRight)
 import Data.Tuple (snd)
 import Mote.Plan as Plan
-import Mote.Suite (RunMode(..), Suite(..))
-import Mote.Suite as Suite
+import Mote.Description (RunMode(..), Description(..))
+import Mote.Description as Description
 
--- | The main `MoteT` / `Mote` monadic DSL used to describe groups (suites) and
--- | items (tests).
+-- | The main `MoteT` / `Mote` monadic DSL used to describe tests and groups of
+-- | tests.
 -- |
 -- | After description via this DSL a `Plan` can be generated, that can then
--- | finally be interpreted in the target monad.
-newtype MoteT x y m a = MoteT (WriterT (Array (Suite x y)) m a)
+-- | finally be interpreted into some target monad.
+newtype MoteT x y m a = MoteT (WriterT (Array (Description x y)) m a)
 
 -- | A non-effectful version of `MoteT`. This is for cases where groups and
--- | items can be described purely.
+-- | tests can be described purely.
 type Mote x y = MoteT x y Identity
 
 derive instance newtypeMoteT :: Newtype (MoteT x y m a) _
@@ -37,36 +37,37 @@ derive newtype instance monadAskMoteT :: MonadAsk r m => MonadAsk r (MoteT x y m
 derive newtype instance monadReaderMoteT :: MonadReader r m => MonadReader r (MoteT x y m)
 derive newtype instance monadEffMoteT :: MonadEff eff m => MonadEff eff (MoteT x y m)
 
--- | Describes a new group (suite).
+-- | Describes a new group. Groups can contain further groups or tests, or a
+-- | combination of both.
 group :: forall x y m a. Monad m => String -> MoteT x y m a -> MoteT x y m a
-group label (MoteT ss) = MoteT (censor (pure <<< Suite.group label) ss)
+group label (MoteT ss) = MoteT (censor (pure <<< Description.group label) ss)
 
--- | Describes a new item (test).
-item :: forall x y m. Monad m => String -> y -> MoteT x y m Unit
-item label = MoteT <<< tell <<< pure <<< Suite.item label
+-- | Describes a new test.
+test :: forall x y m. Monad m => String -> y -> MoteT x y m Unit
+test label = MoteT <<< tell <<< pure <<< Description.test label
 
--- | Marks the following group(s) and/or item(s) to be skipped when generating
+-- | Marks the following group(s) and/or test(s) to be skipped when generating
 -- | a plan.
 skip :: forall x y m a. Monad m => MoteT x y m a -> MoteT x y m a
-skip (MoteT ss) = MoteT (censor (map (Suite.setRunMode Skip)) ss)
+skip (MoteT ss) = MoteT (censor (map (Description.setRunMode Skip)) ss)
 
--- | Marks the following group(s) and/or item(s) to be added to a plan while
+-- | Marks the following group(s) and/or test(s) to be added to a plan while
 -- | skipping any other siblings that are not also tagged with `only`.
 only :: forall x y m a. Monad m => MoteT x y m a -> MoteT x y m a
-only (MoteT ss) = MoteT (censor (map (Suite.setRunMode Only)) ss)
+only (MoteT ss) = MoteT (censor (map (Description.setRunMode Only)) ss)
 
 -- | Specifies actions to run before and after the following group(s) and/or
--- | item(s).
+-- | test(s).
 -- |
--- | The bracketing is applied to every following group or item individually;
--- | it will be repeated when each group or item is run.
+-- | The bracketing is applied to every following group or test individually;
+-- | it will be repeated when each group or test is run.
 bracket
   :: forall x y m a r
    . Monad m
   => { before :: x r, after :: r -> x Unit }
   -> MoteT x y m a
   -> MoteT x y m a
-bracket b (MoteT ss) = MoteT (censor (map (Suite.setBracket b)) ss)
+bracket b (MoteT ss) = MoteT (censor (map (Description.setBracket b)) ss)
 
 -- | Generate a `Plan` from a `Mote`. The result of this can then be
 -- | interpreted to actually run the suites and tests described in the `Mote`.
@@ -77,29 +78,29 @@ plan = un Identity <<< planT
 -- | of this can then be interpreted to actually run the suites and tests
 -- | described in the `MoteT`.
 planT :: forall x y m a. Monad m => MoteT x y m a -> m (Plan.Plan x y)
-planT (MoteT wma) = go <<< snd <$> runWriterT wma
+planT (MoteT wma) = loop <<< snd <$> runWriterT wma
   where
-    go :: Array (Suite x y) -> Plan.Plan x y
-    go ss =
-      let ps = map goSuite ss
+    loop :: Array (Description x y) -> Plan.Plan x y
+    loop ss =
+      let ps = map go ss
       in Plan.Plan (mapMaybe (if any isThat ps then theseRight else theseLeft) ps)
 
-    goSuite :: Suite x y -> These (Plan.PlanItem x y) (Plan.PlanItem x y)
-    goSuite = case _ of
-      Item Skip entry ->
+    go :: Description x y -> These (Plan.PlanItem x y) (Plan.PlanItem x y)
+    go = case _ of
+      Test Skip entry ->
         let a = Plan.Skip entry.label in Both a a
-      Item Normal entry ->
-        Both (Plan.Item entry) (Plan.Skip entry.label)
-      Item Only entry ->
-        That (Plan.Item entry)
+      Test Normal entry ->
+        Both (Plan.Test entry) (Plan.Skip entry.label)
+      Test Only entry ->
+        That (Plan.Test entry)
       Group Skip entry ->
         let a = Plan.Skip entry.label in Both a a
       Group Normal { label, bracket: b, value } ->
         Both
-          (Plan.Group { label, bracket: b, value: go value })
+          (Plan.Group { label, bracket: b, value: loop value })
           (Plan.Skip label)
       Group Only { label, bracket: b, value } ->
-        That (Plan.Group { label, bracket: b, value: go value })
+        That (Plan.Group { label, bracket: b, value: loop value })
 
     isThat :: forall l r. These l r -> Boolean
     isThat = case _ of
