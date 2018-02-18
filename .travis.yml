@@ -10,6 +10,8 @@ script:
   - npm run -s build
   - bower install
   - npm run -s test
+  - npm run -s example-spec
+  - npm run -s example-test-unit
 after_success:
 - >-
   test $TRAVIS_TAG &&

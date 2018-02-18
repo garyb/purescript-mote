@@ -1,0 +1,8 @@
+{
+  "name": "test-unit",
+  "private": true,
+  "dependencies": {
+    "purescript-mote": "*",
+    "purescript-test-unit": "^13.0.0"
+  }
+}

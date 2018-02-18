@@ -1,0 +1,8 @@
+{
+  "name": "spec",
+  "private": true,
+  "dependencies": {
+    "purescript-mote": "*",
+    "purescript-spec": "^2.0.0"
+  }
+}

@@ -3,7 +3,9 @@
   "scripts": {
     "clean": "rimraf output && rimraf .pulp-cache",
     "build": "pulp build -- --censor-lib --strict",
-    "test": "pulp test -- --censor-lib --strict"
+    "test": "pulp test -- --censor-lib --strict",
+    "example-spec": "pulp run --include examples/spec/src --main Example.Spec",
+    "example-test-unit": "pulp run --include examples/test-unit/src --main Example.TestUnit"
   },
   "devDependencies": {
     "pulp": "^12.0.1",
