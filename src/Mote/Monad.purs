@@ -8,12 +8,13 @@ import Control.Monad.Writer (class MonadTrans, WriterT, censor, runWriterT, tell
 import Data.Array (mapMaybe)
 import Data.Foldable (any)
 import Data.Identity (Identity(..))
+import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype, un)
 import Data.These (These(..), theseLeft, theseRight)
 import Data.Tuple (snd)
-import Mote.Plan as Plan
 import Mote.Description (RunMode(..), Description(..))
 import Mote.Description as Description
+import Mote.Plan as Plan
 
 -- | The main `MoteT` / `Mote` monadic DSL used to describe tests and groups of
 -- | tests.
@@ -136,14 +137,22 @@ planT (MoteT wma) = loop <<< snd <$> runWriterT wma
         Both (Plan.Test entry) (Plan.Skip entry.label)
       Test Only entry ->
         That (Plan.Test entry)
-      Group Skip entry ->
-        let a = Plan.Skip entry.label in Both a a
+      Group Skip { label, value } ->
+        let a = Plan.Group { label, bracket: Nothing, value: goSkip value }
+        in Both a a
       Group Normal { label, bracket: b, value } ->
         Both
           (Plan.Group { label, bracket: b, value: loop value })
           (Plan.Skip label)
       Group Only { label, bracket: b, value } ->
         That (Plan.Group { label, bracket: b, value: loop value })
+
+    goSkip :: Array (Description bracket test) -> Plan.Plan bracket test
+    goSkip a = Plan.Plan $ a <#> case _ of
+      Test _ { label } ->
+        Plan.Skip label
+      Group _ { label, value } ->
+        Plan.Group { label, bracket: Nothing, value: goSkip value }
 
     isThat :: forall l r. These l r -> Boolean
     isThat = case _ of

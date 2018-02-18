@@ -28,7 +28,7 @@ interpret = run 0
         (\{ label, bracket, value } -> do
           log (indent depth label)
           withBracket depth bracket value)
-        log
+        (\label -> log (indent depth ("Skip: " <> label)))
         (\{ label, bracket, value } -> do
           log (indent depth label)
           withBracket depth bracket (run (depth + 1) value))
