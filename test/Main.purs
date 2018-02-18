@@ -20,7 +20,7 @@ type Test = Eff Effects
 main :: Eff Effects Unit
 main = interpret $ plan spec
 
-interpret :: forall eff. Plan TestBracket (Test Unit) -> Eff Effects Unit
+interpret :: Plan TestBracket (Test Unit) -> Eff Effects Unit
 interpret = run 0
   where
     run depth =
@@ -36,10 +36,10 @@ interpret = run 0
     indent :: Int -> String -> String
     indent depth s = power "--" depth <> s
 
-    withBracket :: forall x y. Int -> Maybe (Exists (Bracket TestBracket)) -> Eff Effects y -> Eff Effects  y
+    withBracket :: forall a. Int -> Maybe (Exists (Bracket TestBracket)) -> Eff Effects a -> Eff Effects a
     withBracket depth mbracket act = maybe act go mbracket
       where
-        go :: Exists (Bracket TestBracket) -> Eff Effects y
+        go :: Exists (Bracket TestBracket) -> Eff Effects a
         go = unBracket \before after -> do
           r <- before
           result <- act
