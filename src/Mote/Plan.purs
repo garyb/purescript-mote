@@ -5,13 +5,13 @@ import Prelude
 import Mote.Entry (Entry)
 
 -- | The plan for running a test suite.
-newtype Plan a b = Plan (Array (PlanItem a b))
+newtype Plan b t = Plan (Array (PlanItem b t))
 
 -- | An item in a `Plan`.
-data PlanItem a b
-  = Test (Entry a b)
+data PlanItem b t
+  = Test (Entry b t)
   | Skip String
-  | Group (Entry a (Plan a b))
+  | Group (Entry b (Plan b t))
 
 -- | Eliminates each `PlanItem` constructor and sequences actions within a
 -- | `Plan`.
@@ -29,12 +29,12 @@ data PlanItem a b
 -- | This fold only applies one layer at a time, so when building an interpreter
 -- | it will need to be called recursively within the group handler.
 foldPlan
-  :: forall a b i r
-   . (Entry a b -> i)
+  :: forall b t i r
+   . (Entry b t -> i)
   -> (String -> i)
-  -> (Entry a (Plan a b) -> i)
+  -> (Entry b (Plan b t) -> i)
   -> (Array i -> r)
-  -> Plan a b
+  -> Plan b t
   -> r
 foldPlan goTest goSkip goGroup sequence (Plan items) =
   sequence $ flip map items case _ of

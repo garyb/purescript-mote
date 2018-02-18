@@ -7,16 +7,20 @@ import Mote.Entry (Entry)
 import Mote.Entry as Entry
 
 -- | The data structure backing the `MoteT` DSL.
-data Description a b
-  = Test RunMode (Entry a b)
-  | Group RunMode (Entry a (Array (Description a b)))
+data Description b t
+  = Test RunMode (Entry b t)
+  | Group RunMode (Entry b (Array (Description b t)))
 
--- | Smart constructor for `Test` with a basic entry.
-test :: forall a b. String -> b -> Description a b
+-- | Basic constructor for `Test` with a label and value.
+test :: forall b t. String -> t -> Description b t
 test label = Test Normal <<< Entry.entry label
 
--- | Smart constructor for `Group` with a basic entry.
-group :: forall a b. String -> Array (Description a b) -> Description a b
+-- | Basic constructor for `Group` with a label and inner entries.
+group
+  :: forall b t
+  . String
+  -> Array (Description b t)
+  -> Description b t
 group label = Group Normal <<< Entry.entry label
 
 -- | The run mode option for a `Description` item. Used when building a `Plan`
@@ -24,7 +28,11 @@ group label = Group Normal <<< Entry.entry label
 data RunMode = Normal | Only | Skip
 
 -- | Sets the `RunMode` of a `Description`.
-setRunMode :: forall a b. RunMode -> Description a b -> Description a b
+setRunMode
+  :: forall b t
+   . RunMode
+  -> Description b t
+  -> Description b t
 setRunMode mode = case _ of
   Test _ entry ->
     Test mode entry
@@ -33,10 +41,10 @@ setRunMode mode = case _ of
 
 -- | Sets the `bracket` value of a `Description`.
 setBracket
-  :: forall a b r
-   . { before :: a r, after :: r -> a Unit }
-  -> Description a b
-  -> Description a b
+  :: forall b t r
+   . { before :: b r, after :: r -> b Unit }
+  -> Description b t
+  -> Description b t
 setBracket { before, after } = case _ of
   Test mode entry ->
     Test mode (entry { bracket = Just (Entry.bracket before after) })
