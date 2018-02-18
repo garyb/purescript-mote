@@ -8,7 +8,7 @@ import Control.Monad.Eff.Exception (error)
 import Control.Monad.Error.Class (throwError)
 import Data.Const (Const)
 import Data.Foldable (sequence_)
-import Mote (Mote, plan, group, item)
+import Mote (Mote, plan, group, test)
 import Mote.Plan (Plan, foldPlan)
 import Test.Spec (Spec, describe, it, pending)
 import Test.Spec.Assertions (shouldContain) as A
@@ -43,15 +43,15 @@ assertionSpec =
 
         group "String" do
           group "shouldContain" do
-            item "accepts strings that contains substrings" $
+            test "accepts strings that contains substrings" $
               "foobar" `AS.shouldContain` "foo"
-            item "rejects strings that does not contain substrings" $
+            test "rejects strings that does not contain substrings" $
               AF.expectError $ "baz" `AS.shouldContain` "foo"
 
           group "shouldNotContain" do
-            item "accepts strings that does not contain substrings" $
+            test "accepts strings that does not contain substrings" $
               "foobar" `AS.shouldNotContain` "baz"
-            item "rejects strings that contains substrings" $
+            test "rejects strings that contains substrings" $
               AF.expectError $ "bazbar" `AS.shouldNotContain` "baz"
 
         group "Foldable" do
@@ -61,15 +61,15 @@ assertionSpec =
             let notcontained = "zzz"
 
             group "shouldContain" do
-              item "accepts f that contains a" $
+              test "accepts f that contains a" $
                 f `A.shouldContain` contained
-              item "rejects f that does not contain a" $
+              test "rejects f that does not contain a" $
                 AF.expectError $ f `A.shouldContain` notcontained
 
 
         group "Aff" $
           group "expectError" do
-            item "returns unit when given an error" $
+            test "returns unit when given an error" $
               AF.expectError $ throwError $ error "omg"
-            item "returns an error when given a non-error" $
+            test "returns an error when given a non-error" $
               AF.expectError $ AF.expectError $ pure "ok"
