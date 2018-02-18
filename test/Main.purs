@@ -4,11 +4,49 @@ import Prelude
 
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log)
-import Data.Foldable (for_, sequence_)
-import Mote.Monad (Mote, group, item, only, plan, skip)
-import Mote.Plan (Plan(..), PlanItem(..))
+import Data.Exists (Exists)
+import Data.Foldable (sequence_)
+import Data.Maybe (Maybe, maybe)
+import Data.Monoid (power)
+import Mote (Mote, Plan, bracket, group, item, only, plan, skip)
+import Mote.Entry (Bracket, unBracket)
+import Mote.Plan (foldPlan)
 
-spec :: forall t. Monad t => Mote (t Unit) Unit
+type Effects = (console :: CONSOLE)
+
+type TestBracket = Eff Effects
+type Test = Eff Effects
+
+main :: Eff Effects Unit
+main = interpret $ plan spec
+
+interpret :: forall eff. Plan TestBracket (Test Unit) -> Eff Effects Unit
+interpret = run 0
+  where
+    run depth =
+      foldPlan
+        (\{ label, bracket, value } -> do
+          log (indent depth label)
+          withBracket depth bracket value)
+        log
+        (\{ label, bracket, value } -> do
+          log (indent depth label)
+          withBracket depth bracket (run (depth + 1) value))
+        sequence_
+    indent :: Int -> String -> String
+    indent depth s = power "--" depth <> s
+
+    withBracket :: forall x y. Int -> Maybe (Exists (Bracket TestBracket)) -> Eff Effects y -> Eff Effects  y
+    withBracket depth mbracket act = maybe act go mbracket
+      where
+        go :: Exists (Bracket TestBracket) -> Eff Effects y
+        go = unBracket \before after -> do
+          r <- before
+          result <- act
+          after r
+          pure result
+
+spec :: Mote TestBracket (Test Unit) Unit
 spec = do
   group "A bunch of stuff" do
     skip $ item "Do a setup thing" do
@@ -21,30 +59,12 @@ spec = do
       item "A final thing" do
         pure unit
     group "Some other less stuff" do
-      item "A other thing" do
-        pure unit
+      bracket { before: log "> Sneak before", after: const (log "> Sneak after") } do
+        item "A other thing" do
+          log "Do some test bidnezz"
+          pure unit
+        item "A other thing 2" do
+          log "Do some test bidnezz"
+          pure unit
       item "Another other thing" do
         pure unit
-
-interpret
-  :: forall eff
-   . Plan (Eff (console :: CONSOLE | eff) Unit)
-  -> Eff (console :: CONSOLE | eff) Unit
-interpret = go ""
-  where
-    go prefix (Plan items) = for_ items case _ of
-      Item { label, before, value, after } -> do
-        log $ prefix <> label
-        sequence_ before
-        value
-        sequence_ after
-      Skip label -> do
-        log $ prefix <> "Skip: " <> label
-      Group { label, before, value, after } -> do
-        log $ prefix <> label
-        sequence_ before
-        go (prefix <> "  ") value
-        sequence_ after
-
-main :: Eff (console :: CONSOLE) Unit
-main = interpret $ plan spec
