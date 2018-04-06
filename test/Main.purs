@@ -36,10 +36,10 @@ interpret = run 0
     indent :: Int -> String -> String
     indent depth s = power "--" depth <> s
 
-    withBracket :: forall a. Int -> Maybe (Exists (Bracket TestBracket)) -> Eff Effects a -> Eff Effects a
+    withBracket :: forall a. Int -> Maybe (Bracket TestBracket) -> Eff Effects a -> Eff Effects a
     withBracket depth mbracket act = maybe act go mbracket
       where
-        go :: Exists (Bracket TestBracket) -> Eff Effects a
+        go :: Bracket TestBracket -> Eff Effects a
         go = unBracket \before after -> do
           r <- before
           result <- act
