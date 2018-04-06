@@ -17,8 +17,7 @@
   ],
   "dependencies": {
     "purescript-these": "^3.0.0",
-    "purescript-transformers": "^3.5.0",
-    "purescript-exists": "^3.0.0"
+    "purescript-transformers": "^3.5.0"
   },
   "devDependencies": {
     "purescript-console": "^3.0.0",
