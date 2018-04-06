@@ -4,12 +4,12 @@ import Prelude
 
 import Control.Monad.Eff.Class (class MonadEff)
 import Control.Monad.Reader (class MonadAsk, class MonadReader)
-import Control.Monad.Writer (class MonadTrans, WriterT, censor, runWriterT, tell)
+import Control.Monad.Writer (class MonadTrans, WriterT, censor, mapWriterT, runWriterT, tell)
 import Data.Array (mapMaybe)
 import Data.Foldable (any)
 import Data.Identity (Identity(..))
 import Data.Maybe (Maybe(..))
-import Data.Newtype (class Newtype, un)
+import Data.Newtype (class Newtype, over, un)
 import Data.These (These(..), theseLeft, theseRight)
 import Data.Tuple (snd)
 import Mote.Description (RunMode(..), Description(..))
@@ -56,6 +56,14 @@ derive newtype instance monadTransMoteT :: MonadTrans (MoteT bracket test)
 derive newtype instance monadAskMoteT :: MonadAsk r m => MonadAsk r (MoteT bracket test m)
 derive newtype instance monadReaderMoteT :: MonadReader r m => MonadReader r (MoteT bracket test m)
 derive newtype instance monadEffMoteT :: MonadEff eff m => MonadEff eff (MoteT bracket test m)
+
+-- | Changes the `m` effect monad used during test suite construction.
+hoist
+  :: forall bracket test m n
+   . (m ~> n)
+  -> MoteT bracket test m
+  ~> MoteT bracket test n
+hoist nat = over MoteT (mapWriterT nat)
 
 -- | Describes a new group. Groups can contain further groups or tests, or a
 -- | combination of both.
