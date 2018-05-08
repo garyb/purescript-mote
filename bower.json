@@ -16,8 +16,8 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-these": "^3.0.0",
-    "purescript-transformers": "^3.5.0"
+    "purescript-these": "#compiler/0.12",
+    "purescript-transformers": "#compiler/0.12"
   },
   "devDependencies": {
     "purescript-console": "^3.0.0",

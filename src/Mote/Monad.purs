@@ -2,7 +2,7 @@ module Mote.Monad where
 
 import Prelude
 
-import Control.Monad.Eff.Class (class MonadEff)
+import Effect.Class (class MonadEffect)
 import Control.Monad.Reader (class MonadAsk, class MonadReader)
 import Control.Monad.Writer (class MonadTrans, WriterT, censor, mapWriterT, runWriterT, tell)
 import Data.Array (mapMaybe)
@@ -55,7 +55,7 @@ derive newtype instance monadMoteT :: Monad m => Monad (MoteT bracket test m)
 derive newtype instance monadTransMoteT :: MonadTrans (MoteT bracket test)
 derive newtype instance monadAskMoteT :: MonadAsk r m => MonadAsk r (MoteT bracket test m)
 derive newtype instance monadReaderMoteT :: MonadReader r m => MonadReader r (MoteT bracket test m)
-derive newtype instance monadEffMoteT :: MonadEff eff m => MonadEff eff (MoteT bracket test m)
+derive newtype instance monadEffectMoteT :: MonadEffect m => MonadEffect (MoteT bracket test m)
 
 -- | Changes the `m` effect monad used during test suite construction.
 hoist
