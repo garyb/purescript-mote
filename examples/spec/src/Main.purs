@@ -2,9 +2,9 @@ module Example.Spec where
 
 import Prelude
 
-import Control.Monad.Aff (Aff)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Exception (error)
+import Effect.Aff (Aff)
+import Effect (Effect)
+import Effect.Exception (error)
 import Control.Monad.Error.Class (throwError)
 import Data.Const (Const)
 import Data.Foldable (sequence_)
@@ -15,17 +15,17 @@ import Test.Spec.Assertions (shouldContain) as A
 import Test.Spec.Assertions.Aff (expectError) as AF
 import Test.Spec.Assertions.String (shouldContain, shouldNotContain) as AS
 import Test.Spec.Reporter (consoleReporter)
-import Test.Spec.Runner (RunnerEffects, run)
+import Test.Spec.Runner (run)
 
-main :: forall eff. Eff (RunnerEffects eff) Unit
+main :: Effect Unit
 main = run [ consoleReporter ] do
   interpret assertionSpec
 
 -- | Interpreter runs a `Mote` to produce a `Spec`
-interpret :: forall eff. Mote (Const Void) (Aff eff Unit) Unit -> Spec eff Unit
+interpret :: Mote (Const Void) (Aff Unit) Unit -> Spec Unit
 interpret = go <<< plan
   where
-    go :: Plan (Const Void) (Aff eff Unit) -> Spec eff Unit
+    go :: Plan (Const Void) (Aff Unit) -> Spec Unit
     go =
       foldPlan
         (\{ label, value } -> it label value)
@@ -35,7 +35,7 @@ interpret = go <<< plan
 
 -- | Spec lifted from the tests in `purescript-spec`, but costructed using the
 -- | `Mote` DSL rather than `Spec`.
-assertionSpec :: forall eff. Mote (Const Void) (Aff eff Unit) Unit
+assertionSpec :: Mote (Const Void) (Aff Unit) Unit
 assertionSpec =
   group "Test" $
     group "Spec" $
