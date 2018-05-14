@@ -2,25 +2,20 @@ module Test.Main where
 
 import Prelude
 
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log)
 import Data.Exists (Exists)
 import Data.Foldable (sequence_)
 import Data.Maybe (Maybe, maybe)
 import Data.Monoid (power)
+import Effect (Effect)
+import Effect.Console (log)
 import Mote (Mote, Plan, bracket, group, test, only, plan, skip)
 import Mote.Entry (Bracket, unBracket)
 import Mote.Plan (foldPlan)
 
-type Effects = (console :: CONSOLE)
-
-type TestBracket = Eff Effects
-type Test = Eff Effects
-
-main :: Eff Effects Unit
+main :: Effect Unit
 main = interpret $ plan spec
 
-interpret :: Plan TestBracket (Test Unit) -> Eff Effects Unit
+interpret :: Plan Effect (Effect Unit) -> Effect Unit
 interpret = run 0
   where
     run depth =
@@ -36,17 +31,22 @@ interpret = run 0
     indent :: Int -> String -> String
     indent depth s = power "--" depth <> s
 
-    withBracket :: forall a. Int -> Maybe (Bracket TestBracket) -> Eff Effects a -> Eff Effects a
+    withBracket
+      :: forall a
+       . Int
+      -> Maybe (Bracket Effect)
+      -> Effect a
+      -> Effect a
     withBracket depth mbracket act = maybe act go mbracket
       where
-        go :: Bracket TestBracket -> Eff Effects a
+        go :: Bracket Effect -> Effect a
         go = unBracket \before after -> do
           r <- before
           result <- act
           after r
           pure result
 
-spec :: Mote TestBracket (Test Unit) Unit
+spec :: Mote Effect (Effect Unit) Unit
 spec = do
   group "A bunch of stuff" do
     skip $ test "Do a setup thing" do
