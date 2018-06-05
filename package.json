@@ -8,8 +8,8 @@
     "example-test-unit": "pulp run --include examples/test-unit/src --main Example.TestUnit"
   },
   "devDependencies": {
-    "pulp": "^12.0.1",
-    "purescript": "cryogenian/node-purescript-bin#master",
+    "pulp": "^12.2.0",
+    "purescript": "slamdata/node-purescript#0.12",
     "purescript-psa": "^0.6.0",
     "rimraf": "^2.6.2"
   }

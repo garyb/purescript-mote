@@ -16,12 +16,12 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-these": "#compiler/0.12",
-    "purescript-transformers": "#compiler/0.12"
+    "purescript-these": "^4.0.0",
+    "purescript-transformers": "^4.1.0"
   },
   "devDependencies": {
-    "purescript-console": "#compiler/0.12",
-    "purescript-spec": "justinwoo/purescript-spec#compiler/0.12",
-    "purescript-test-unit": "justinwoo/purescript-test-unit#compiler/0.12"
+    "purescript-console": "^4.1.0",
+    "purescript-spec": "^3.0.0",
+    "purescript-test-unit": "^14.0.0"
   }
 }
