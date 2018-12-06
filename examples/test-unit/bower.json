@@ -3,6 +3,6 @@
   "private": true,
   "dependencies": {
     "purescript-mote": "*",
-    "purescript-test-unit": "^13.0.0"
+    "purescript-test-unit": "justinwoo/purescript-test-unit#compiler/0.12"
   }
 }

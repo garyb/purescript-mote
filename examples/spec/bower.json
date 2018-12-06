@@ -3,6 +3,6 @@
   "private": true,
   "dependencies": {
     "purescript-mote": "*",
-    "purescript-spec": "^2.0.0"
+    "purescript-spec": "justinwoo/purescript-spec#compiler/0.12"
   }
 }

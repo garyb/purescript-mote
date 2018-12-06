@@ -16,12 +16,13 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-these": "^3.0.0",
-    "purescript-transformers": "^3.5.0"
+    "purescript-these": "^4.0.0",
+    "purescript-transformers": "^4.1.0",
+    "purescript-arrays": "^5.1.1"
   },
   "devDependencies": {
-    "purescript-console": "^3.0.0",
-    "purescript-spec": "^2.0.0",
-    "purescript-test-unit": "^13.0.0"
+    "purescript-console": "^4.1.0",
+    "purescript-spec": "^3.0.0",
+    "purescript-test-unit": "^14.0.0"
   }
 }
