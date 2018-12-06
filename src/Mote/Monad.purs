@@ -2,6 +2,7 @@ module Mote.Monad where
 
 import Prelude
 
+import Effect.Class (class MonadEffect)
 import Control.Monad.Reader (class MonadAsk, class MonadReader)
 import Control.Monad.Writer (class MonadTrans, WriterT, censor, mapWriterT, runWriterT, tell)
 import Data.Array (mapMaybe)
