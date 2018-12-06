@@ -12,7 +12,6 @@ import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype, over, un)
 import Data.These (These(..), theseLeft, theseRight)
 import Data.Tuple (snd)
-import Effect.Class (class MonadEffect)
 import Mote.Description (RunMode(..), Description(..))
 import Mote.Description as Description
 import Mote.Plan as Plan

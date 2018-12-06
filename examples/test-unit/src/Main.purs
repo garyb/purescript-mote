@@ -53,7 +53,7 @@ tests ref = do
     test "a test in a test suite" do
       pure unit
   test "tests run only once: part 1" do
-    liftEffect $ Ref.modify (_ + 1) ref
+    liftEffect $ Ref.modify_ (_ + 1) ref
   test "tests run only once: part deux" do
     Assert.equal 1 =<< liftEffect (Ref.read ref)
   group "another suite" do

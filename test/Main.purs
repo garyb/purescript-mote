@@ -2,7 +2,6 @@ module Test.Main where
 
 import Prelude
 
-import Data.Exists (Exists)
 import Data.Foldable (sequence_)
 import Data.Maybe (Maybe, maybe)
 import Data.Monoid (power)
