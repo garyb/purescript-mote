@@ -65,6 +65,14 @@ hoist
   ~> MoteT bracket test n
 hoist nat = over MoteT (mapWriterT nat)
 
+mapTest
+  :: forall bracket test test' m
+   . Functor m
+  => (test -> test')
+  -> MoteT bracket test m
+  ~> MoteT bracket test' m
+mapTest f = over MoteT (mapWriterT (map (map (map (map f)))))
+
 -- | Describes a new group. Groups can contain further groups or tests, or a
 -- | combination of both.
 group

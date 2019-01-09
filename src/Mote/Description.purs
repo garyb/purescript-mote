@@ -11,6 +11,8 @@ data Description b t
   = Test RunMode (Entry b t)
   | Group RunMode (Entry b (Array (Description b t)))
 
+derive instance functorDescription :: Functor (Description b)
+
 -- | Basic constructor for `Test` with a label and value.
 test :: forall b t. String -> t -> Description b t
 test label = Test Normal <<< Entry.entry label
