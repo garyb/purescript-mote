@@ -1,6 +1,7 @@
 # purescript-mote
 
-[![Latest release](http://img.shields.io/github/release/garyb/purescript-mote.svg)](https://github.com/garyb/purescript-mote/releases) [![Build status](https://travis-ci.org/garyb/purescript-mote.svg?branch=master)](https://travis-ci.org/garyb/purescript-mote)
+[![Latest release](http://img.shields.io/github/release/garyb/purescript-mote.svg)](https://github.com/garyb/purescript-mote/releases) 
+![Build Status](https://github.com/garyb/purescript-mote/actions/workflows/ci.yml/badge.svg)
 
 A library for describing test suites / specs.
 
