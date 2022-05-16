@@ -15,13 +15,13 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-these": "^5.0.0",
-    "purescript-transformers": "^5.0.0",
-    "purescript-arrays": "^6.0.1"
+    "purescript-these": "^6.0.0",
+    "purescript-transformers": "^6.0.0",
+    "purescript-arrays": "^7.0.0"
   },
   "devDependencies": {
-    "purescript-console": "^5.0.0",
-    "purescript-spec": "^5.0.0",
-    "purescript-test-unit": "^16.0.0"
+    "purescript-console": "^6.0.0",
+    "purescript-spec": "^7.0.0",
+    "purescript-test-unit": "^17.0.0"
   }
 }
