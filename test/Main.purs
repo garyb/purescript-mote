@@ -36,7 +36,7 @@ interpret = run 0
       -> Maybe (Bracket Effect)
       -> Effect a
       -> Effect a
-    withBracket depth mbracket act = maybe act go mbracket
+    withBracket _ mbracket act = maybe act go mbracket
       where
         go :: Bracket Effect -> Effect a
         go = unBracket \before after -> do

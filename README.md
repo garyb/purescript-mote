@@ -16,7 +16,7 @@ Some demos of interpreting a Mote plan as a `Spec` or `TestSuite` are provided i
 ## Installation
 
 ```
-bower install purescript-mote
+spago install mote
 ```
 
 ## Documentation

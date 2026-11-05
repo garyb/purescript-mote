@@ -1,8 +1,0 @@
-{
-  "name": "test-unit",
-  "private": true,
-  "dependencies": {
-    "purescript-mote": "*",
-    "purescript-test-unit": "justinwoo/purescript-test-unit#compiler/0.12"
-  }
-}

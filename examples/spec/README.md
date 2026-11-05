@@ -15,6 +15,5 @@ Or from the current directory:
 
 ```
 $ npm install
-$ bower install
-$ npm run build
+$ npm run run-example
 ```
