@@ -2,7 +2,7 @@ module Example.Spec where
 
 import Prelude
 
-import Effect.Aff (Aff)
+import Effect.Aff (Aff, launchAff_)
 import Effect (Effect)
 import Effect.Exception (error)
 import Control.Monad.Error.Class (throwError)
@@ -12,13 +12,13 @@ import Mote (Mote, plan, group, test)
 import Mote.Plan (Plan, foldPlan)
 import Test.Spec (Spec, describe, it, pending)
 import Test.Spec.Assertions (shouldContain) as A
-import Test.Spec.Assertions.Aff (expectError) as AF
+import Test.Spec.Assertions (expectError) as AF
 import Test.Spec.Assertions.String (shouldContain, shouldNotContain) as AS
 import Test.Spec.Reporter (consoleReporter)
-import Test.Spec.Runner (run)
+import Test.Spec.Runner (runSpec)
 
 main :: Effect Unit
-main = run [ consoleReporter ] do
+main = launchAff_ $ runSpec [ consoleReporter ] do
   interpret assertionSpec
 
 -- | Interpreter runs a `Mote` to produce a `Spec`

@@ -14,18 +14,13 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "12"
+          node-version: "22"
 
       - name: Install dependencies
-        run: |
-          npm install -g bower
-          npm install
-          bower install --production
+        run: npm install
 
       - name: Build source
         run: npm run-script build
 
       - name: Run tests
-        run: |
-          bower install
-          npm run-script test --if-present
+        run: npm run-script test --if-present

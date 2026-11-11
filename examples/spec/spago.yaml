@@ -1,0 +1,14 @@
+package:
+  name: mote-example-spec
+  run:
+    main: Example.Spec
+  dependencies:
+    - aff: ">=7.0.0 <9.0.0"
+    - const: ">=6.0.0 <7.0.0"
+    - effect: ">=4.0.0 <5.0.0"
+    - exceptions: ">=6.0.0 <7.0.0"
+    - foldable-traversable: ">=6.0.0 <7.0.0"
+    - mote: "*"
+    - prelude: ">=6.0.0 <7.0.0"
+    - spec: ">=7.0.0 <9.0.0"
+    - transformers: ">=6.0.0 <7.0.0"

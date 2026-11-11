@@ -1,0 +1,14 @@
+package:
+  name: mote-example-test-unit
+  run:
+    main: Example.TestUnit
+  dependencies:
+    - aff: ">=7.0.0 <9.0.0"
+    - const: ">=6.0.0 <7.0.0"
+    - effect: ">=4.0.0 <5.0.0"
+    - foldable-traversable: ">=6.0.0 <7.0.0"
+    - mote: "*"
+    - prelude: ">=6.0.0 <7.0.0"
+    - quickcheck: ">=8.0.0 <9.0.0"
+    - refs: ">=6.0.0 <7.0.0"
+    - test-unit: ">=17.0.0 <18.0.0"

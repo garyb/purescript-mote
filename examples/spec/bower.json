@@ -1,8 +1,0 @@
-{
-  "name": "spec",
-  "private": true,
-  "dependencies": {
-    "purescript-mote": "*",
-    "purescript-spec": "justinwoo/purescript-spec#compiler/0.12"
-  }
-}
